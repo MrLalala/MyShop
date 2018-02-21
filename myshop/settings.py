@@ -25,7 +25,7 @@ SECRET_KEY = '#%mvqiq4j3kw9ev+az^^w0(hux0o8-*#h3z_dg^xm+=-6ue2zw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,9 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sorl.thumbnail',
+    'paypal.standard.ipn',
     'shop',
     'cart',
     'orders',
+    'payment',
 ]
 
 MIDDLEWARE = [
@@ -72,6 +74,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'myshop.wsgi.application'
 
@@ -138,3 +141,5 @@ EMAIL_PORT = 465
 EMAIL_HOST_USER = '1354410847@qq.com'
 EMAIL_HOST_PASSWORD = 'tdzeuncmpcjqhaba'
 
+PAYPAL_RECEIVER_EMAIL = '1354410847-facilitator@qq.com'
+PAYPAL_TEST = True

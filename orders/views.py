@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.core.urlresolvers import reverse
 from .models import OrderItem
 from .forms import OrderCreatedForm
 from cart.cart import Cart
@@ -32,10 +33,10 @@ def order_create(request):
                 )
             # 清空购物车
             cart.clear()
-            # 后台自动发送邮件
-            order_created.delay(order.id)
+            request.session['order_id'] = order.id
             # 成功返回订单
-            return render(request, 'orders/order/created.html', {'order': order})
+            # return render(request, 'orders/order/created.html', {'order': order})
+            return redirect(reverse('payment:process'))
     else:
         # 返回空表单
         form = OrderCreatedForm()
