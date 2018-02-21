@@ -2,6 +2,7 @@
 from decimal import Decimal
 from django.conf import settings
 from shop.models import Product
+from coupons.models import Coupon
 
 
 class Cart(object):
@@ -15,6 +16,7 @@ class Cart(object):
         self.session = request.session
         # 这句话是指从session中获取名字为XXX的值
         cart = self.session.get(settings.CART_SESSION_ID)
+        self.coupon_id = request.session.get('coupon_id')
         # 如果没有，就将其初始化为一个空字典
         if not cart:
             # 保存一个空的字典在settings中
@@ -51,6 +53,32 @@ class Cart(object):
         else:
             self.cart[product_id]['quantity'] += quantity
         self.save()
+
+    @property
+    def coupon(self):
+        """
+        获取优惠券对象
+        :return: 优惠券对象或者空对象
+        """
+        if self.coupon_id:
+            return Coupon.objects.get(id=self.coupon_id)
+        return None
+
+    def get_discount(self):
+        """
+        计算折扣值
+        :return: 减免的金额
+        """
+        if self.coupon:
+            return (self.coupon.discount / Decimal('100')) * self.get_total_price()
+        return Decimal('0')
+
+    def get_total_price_after_discount(self):
+        """
+        计算见面后的价格
+        :return: 减免后的价格
+        """
+        return self.get_total_price() - self.get_discount()
 
     def remove(self, product):
         """

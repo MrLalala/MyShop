@@ -47,7 +47,11 @@ def order_create(request):
         form = OrderCreatedForm(request.POST)
         if form.is_valid():
             # 保存订单
-            order = form.save()
+            order = form.save(commit=False)
+            if cart.coupon:
+                order.coupon = cart.coupon
+                order.discount = cart.coupon.discount
+            order.save()
             # 对购物车中每一件商品建立订单子项
             for item in cart:
                 OrderItem.objects.create(
