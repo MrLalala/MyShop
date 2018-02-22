@@ -18,12 +18,11 @@ def admin_order_detail(request, order_id):
 
 @staff_member_required()
 def create_pdf(request, order_id):
-    from django.http import HttpResponse
-    from django.template.loader import render_to_string
     order = get_object_or_404(Order, id=order_id)
-    html = render_to_string('orders/order/pdf.html', {'order': order})
-    response = HttpResponse(content='application/pdf')
-    response['Content-Disposition'] = 'filename=order_{}'.format(order.id)
+    return render(request, 'orders/order/pdf.html', {'order': order})
+    # html = render_to_string('orders/order/pdf.html', {'order': order})
+    # response = HttpResponse(content='application/pdf')
+    # response['Content-Disposition'] = 'filename=order_{}'.format(order.id)
     # weasyprint.HTML(string=html).write_pdf(
     #     response, stylesheets=[
     #         weasyprint.CSS(
@@ -31,7 +30,7 @@ def create_pdf(request, order_id):
     #         )
     #     ]
     # )
-    return response
+    # return response
 
 
 def order_create(request):
